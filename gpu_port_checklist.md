@@ -1,13 +1,7 @@
 # Benchmark GPU Porting progress
 
 - [x] **MOM_continuity_PPM.F90** (Total: 22.100000)
-- [ ] **MOM_vert_friction.F90** (Total: 16.640000)
-  - [ ] vertvisc_coef (7.665000)
-  - [ ] find_coupling_coef (3.205000)
-  - [ ] vertvisc_remnant (3.085000)
-  - [ ] vertvisc (2.095000)
-  - [ ] vertvisc_limit_vel (0.575000)
-  - [ ] vertvisc_init (0.015000)
+- [x] **MOM_vert_friction.F90** (Total: 16.640000)
 - [ ] **MOM_barotropic.F90** (Total: 14.915000)
   - [ ] btstep (5.330000)
   - [ ] btstep_timeloop (2.070000)
