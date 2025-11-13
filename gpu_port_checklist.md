@@ -1,3 +1,181 @@
+# Benchmark GPU Porting progress
+
+- [x] **MOM_continuity_PPM.F90** (Total: 22.100000)
+- [x] **MOM_vert_friction.F90** (Total: 16.640000)
+- [x] **MOM_barotropic.F90** (Total: 14.915000)
+- [x] **MOM_hor_visc.F90** (Total: 4.770000)
+- [x] **MOM_CoriolisAdv.F90** (Total: 4.405000)
+- [ ] **MOM_dynamics_split_RK2.F90** (Total: 3.835000)
+  - [ ] step_mom_dyn_split_rk2 (3.785000)
+  - [ ] initialize_dyn_split_rk2 (0.025000)
+  - [ ] register_restarts_dyn_split_rk2 (0.025000)
+- [ ] **MOM_EOS_Wright.F90** (Total: 2.600000)
+  - [ ] int_density_dz_wright (1.600000)
+  - [ ] calculate_density_derivs_elem_buggy_wright (0.860000)
+  - [ ] density_elem_buggy_wright (0.080000)
+  - [ ] calculate_density_array_buggy_wright (0.060000)
+- [ ] **MOM_kappa_shear.F90** (Total: 1.980000)
+  - [ ] find_kappa_tke (1.225000)
+  - [ ] calculate_kappa_shear (0.405000)
+  - [ ] kappa_shear_column (0.230000)
+      - Contains calls to EOS calculate density and derivs.
+  - [ ] calculate_projected_state (0.120000)
+- [ ] **MOM_PressureForce_FV.F90** (Total: 1.935000)
+  - [ ] pressureforce_fv_bouss (1.935000)
+      - mostly done, but requires refactor of EOS to be completely on GPU.
+- [ ] **MOM_tracer_hor_diff.F90** (Total: 1.630000)
+  - [ ] tracer_epipycnal_ml_diff (1.365000)
+      - Contains calls to EOS calculate density.
+  - [ ] tracer_hordiff (0.265000)
+- [ ] **MOM_thickness_diffuse.F90** (Total: 1.510000)
+  - [ ] thickness_diffuse_full (1.390000)
+      - Contains calls to EOS calculate density and derivs.
+  - [ ] thickness_diffuse (0.120000)
+- [ ] **MOM_tracer_advect.F90** (Total: 1.190000)
+  - [ ] advect_y (0.735000)
+  - [ ] advect_x (0.355000)
+  - [ ] advect_tracer (0.100000)
+- [ ] **MOM_entrain_diffusive.F90** (Total: 0.840000)
+  - [ ] determine_dskb (0.365000)
+  - [ ] entrainment_diffusive (0.315000)
+      - Contains calls to EOS calculate density and derivs.
+  - [ ] set_ent_bl (0.065000)
+      - Contains calls to EOS calculate density.
+  - [ ] determine_ea_kb (0.040000)
+  - [ ] f_to_ent (0.035000)
+  - [ ] find_maxf_kb (0.015000)
+  - [ ] determine_dskb (0.005000)
+  - [ ] f_kb_to_ea_kb (0.000000)
+- [ ] **MOM_interface_heights.F90** (Total: 0.835000)
+  - [x] thickness_to_dz_3d (0.680000)
+      - do concurrent is turned on/off with a flag.
+  - [ ] find_eta_3d (0.100000)
+  - [ ] find_eta_2d (0.035000)
+  - [ ] thickness_to_dz_jslice (0.015000)
+      - Places that call this will probably need to use the 3d interface to be performant on GPU.
+  - [ ] dz_to_thickness_tv (0.005000)
+  - [ ] find_rho_bottom (0.000000)
+- [ ] **MOM_diabatic_driver.F90** (Total: 0.725000)
+  - [ ] layered_diabatic (0.725000)
+- [ ] **MOM_bulk_mixed_layer.F90** (Total: 0.715000)
+  - [ ] bulkmixedlayer (0.240000)
+      - Contains calls to EOS calculate density and derivs.
+      - Will likely require a refactor due to jki loop with routine calls.
+  - [ ] mechanical_entrainment (0.155000)
+  - [ ] convective_adjustment (0.140000)
+  - [ ] mixedlayer_convection (0.105000)
+  - [ ] mixedlayer_detrain_2 (0.050000)
+  - [ ] ef4 (0.015000)
+  - [ ] find_starting_tke (0.010000)
+  - [ ] ef4 (0.000000)
+- [ ] **MOM_set_viscosity.F90** (Total: 0.510000)
+  - [ ] set_viscous_ml (0.255000)
+      - Requires refactor of EOS to be completely ported.
+  - [ ] set_viscous_bbl (0.220000)
+      - Requires refactor of EOS to be completely ported.
+  - [ ] set_u_at_v (0.020000)
+  - [ ] set_v_at_u (0.015000)
+- [ ] **MOM_diabatic_aux.F90** (Total: 0.415000)
+  - [ ] find_uv_at_h (0.305000)
+  - [ ] make_frazil (0.110000)
+- [ ] **MOM_set_diffusivity.F90** (Total: 0.405000)
+  - [ ] find_n2 (0.115000)
+  - [ ] set_diffusivity (0.110000)
+      - Will likely require a refactor due to jki loop with routine calls.
+  - [ ] find_tke_to_kd (0.080000)
+  - [ ] set_bbl_tke (0.060000)
+  - [ ] add_drag_diffusivity (0.035000)
+  - [ ] set_density_ratios (0.005000)
+      - Contains calls to EOS calculate density.
+- [ ] **MOM_wave_speed.F90** (Total: 0.385000)
+  - [ ] wave_speed (0.300000)
+      - Contains calls to EOS density derivs.
+  - [ ] tridiag_det (0.085000)
+- [ ] **MOM_EOS_base_type.F90** (Total: 0.320000)
+  - [ ] a_calculate_density_derivs_array (0.320000)
+- [ ] **MOM_PressureForce_Montgomery.F90** (Total: 0.285000)
+  - [ ] set_pbce_bouss (0.285000)
+      - Contains calls to EOS density and derivs.
+- [ ] **MOM_lateral_mixing_coeffs.F90** (Total: 0.245000)
+  - [ ] calc_slope_functions_using_just_e (0.225000)
+  - [ ] calc_resoln_function (0.015000)
+  - [ ] varmix_init (0.005000)
+- [ ] **MOM_isopycnal_slopes.F90** (Total: 0.225000)
+  - [ ] vert_fill_ts (0.225000)
+- [ ] **MOM_coms.F90** (Total: 0.210000)
+  - [ ] increment_ints_faster (0.160000)
+  - [ ] increment_ints_faster (0.035000)
+  - [ ] reproducing_sum_3d (0.015000)
+- [ ] **MOM_opacity.F90** (Total: 0.205000)
+  - [ ] absorbremainingsw (0.120000)
+  - [ ] extract_optics_slice (0.055000)
+  - [ ] set_opacity (0.030000)
+  - [ ] opacity_init (0.000000)
+- [ ] **MOM_forcing_type.F90** (Total: 0.170000)
+  - [ ] extractfluxes1d (0.100000)
+  - [ ] find_ustar_mech_forcing (0.035000)
+  - [ ] copy_common_forcing_fields (0.010000)
+  - [ ] forcing_diagnostics (0.010000)
+  - [ ] get_net_mass_forcing (0.010000)
+  - [ ] set_derived_forcing_fields (0.005000)
+- [ ] **MOM.F90** (Total: 0.160000)
+  - [ ] extract_surface_state (0.130000)
+  - [ ] step_mom (0.025000)
+  - [ ] step_mom_tracer_dyn (0.005000)
+- [ ] **MOM_mixed_layer_restrat.F90** (Total: 0.130000)
+  - [ ] mixedlayer_restrat_bml (0.130000)
+- [ ] **MOM_sum_output.F90** (Total: 0.095000)
+  - [ ] write_energy (0.075000)
+  - [ ] accumulate_net_input (0.015000)
+  - [ ] create_depth_list (0.005000)
+- [ ] **MOM_tracer_diabatic.F90** (Total: 0.090000)
+  - [ ] tracer_vertdiff (0.090000)
+- [ ] **MOM_array_transform.F90** (Total: 0.045000)
+  - [ ] rotate_array_real_2d (0.045000)
+- [ ] **MOM_surface_forcing.F90** (Total: 0.045000)
+  - [ ] buoyancy_forcing_linear (0.030000)
+  - [ ] stresses_to_ustar (0.015000)
+- [ ] **MOM_spatial_means.F90** (Total: 0.040000)
+  - [ ] array_global_min_max (0.030000)
+  - [ ] global_mass_int_efp (0.010000)
+  - [ ] ijk_loc (0.000000)
+- [ ] **MOM_bkgnd_mixing.F90** (Total: 0.035000)
+  - [ ] calculate_bkgnd_mixing (0.035000)
+- [ ] **MOM_EOS.F90** (Total: 0.035000)
+  - [ ] calculate_density_derivs_1d (0.025000)
+  - [ ] calculate_density_1d (0.005000)
+  - [ ] calculate_density_derivs_array (0.005000)
+- [ ] **MOM_file_parser.F90** (Total: 0.010000)
+  - [ ] get_variable_line (0.010000)
+  - [ ] replacetabs (0.000000)
+- [ ] **MOM_variables.F90** (Total: 0.005000)
+  - [ ] alloc_bt_cont_type (0.005000)
+- [ ] **MOM_transcribe_grid.F90** (Total: 0.005000)
+  - [ ] copy_dyngrid_to_mom_grid (0.005000)
+- [ ] **MOM_dyn_horgrid.F90** (Total: 0.005000)
+  - [ ] create_dyn_horgrid (0.005000)
+- [ ] **MOM_grid_initialize.F90** (Total: 0.005000)
+  - [ ] initialize_masks (0.005000)
+  - [ ] dy_dj (0.000000)
+  - [ ] find_root (0.000000)
+  - [ ] set_grid_metrics_mercator (0.000000)
+- [ ] **MOM_document.F90** (Total: 0.005000)
+  - [ ] mesghasbeendocumented (0.005000)
+- [ ] **MOM_grid.F90** (Total: 0.000000)
+  - [ ] adcroft_reciprocal (0.000000)
+- [ ] **MOM_diag_remap.F90** (Total: 0.000000)
+  - [ ] diag_remap_calc_hmask (0.000000)
+  - [ ] diag_remap_update (0.000000)
+- [ ] **MOM_regridding.F90** (Total: 0.000000)
+  - [ ] get_zlike_cs (0.000000)
+- [ ] **MOM_diag_mediator.F90** (Total: 0.400000)
+  - [ ] diag_update_remap_grids (0.195000)
+  - [ ] diag_copy_diag_to_storage (0.120000)
+  - [ ] downsample_mask_3d (0.030000)
+  - [ ] diag_masks_set (0.025000)
+  - [ ] set_masks_for_axes (0.025000)
+  - [ ] downsample_diag_masks_set (0.005000)
+
 
 # MOM6 `double_gyre` GPU Porting Progress
 
@@ -32,12 +210,12 @@ subroutines/functions in those sources files which use up the most time.
    - [x] bt_mass_source                    0.010023s **Edward**
    - [x] btcalc                            0.010023s **Edward**
    - [x] set_dtbt                                    **Edward**
-- [ ] MOM_vert_friction.F90                0.726703s **Jorge**
-   - [ ] vertvisc_coef                     0.355834s **Jorge**
-   - [ ] vertvisc                          0.140329s **Jorge**
-   - [ ] vertvisc_remnant                  0.120282s **Jorge**
-   - [ ] find_coupling_coef                0.075176s **Jorge**
-   - [ ] vertvisc_limit_vel                0.035082s **Jorge**
+- [x] MOM_vert_friction.F90                0.726703s **Jorge**
+   - [x] vertvisc_coef                     0.355834s **Jorge**
+   - [x] vertvisc                          0.140329s **Jorge**
+   - [x] vertvisc_remnant                  0.120282s **Jorge**
+   - [x] find_coupling_coef                0.075176s **Jorge**
+   - [x] vertvisc_limit_vel                0.035082s **Jorge**
 - [x] MOM_hor_visc.F90                     0.200470s **Marshall**
    - [x] horizontal_viscosity              0.200470s **Marshall**
 - [x] MOM_CoriolisAdv.F90                  0.125294s **Marshall**
@@ -46,9 +224,9 @@ subroutines/functions in those sources files which use up the most time.
 - [ ] MOM_set_viscosity.F90                0.055129s
    - [ ] set_viscous_bbl                   0.055129s
    - [ ] set_viscous_ML
-- [ ] MOM_dynamics_split_RK2.F90           0.035082s **Jorge**
-   - [ ] step_mom_dyn_split_rk2            0.030070s **Jorge**
-   - [ ] register_restarts_dyn_split_rk2   0.005012s **Jorge**
+- [x] MOM_dynamics_split_RK2.F90           0.035082s **Jorge**
+   - [x] step_mom_dyn_split_rk2            0.030070s **Jorge**
+   - [x] register_restarts_dyn_split_rk2   0.005012s **Jorge**
 - [x] MOM_PressureForce_FV.F90             0.025059s **Marshall**
    - [x] pressureforce_fv_bouss            0.025059s **Marshall**
 - [ ] MOM.F90                              0.010023s
@@ -56,7 +234,7 @@ subroutines/functions in those sources files which use up the most time.
 - [ ] MOM_interface_heights.F90            0.010023s
    - [ ] find_eta_2d                       0.005012s
    - [ ] find_eta_3d                       0.005012s
-   - [ ] thickness_to_dz_3d                0.0s
+   - [x] thickness_to_dz_3d                0.0s      **Edward**
    - [ ] thickness_to_dz_jslice
 
 ## Other diagnostic and data transfer subroutines
